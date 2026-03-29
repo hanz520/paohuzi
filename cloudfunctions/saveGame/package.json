@@ -1,0 +1,9 @@
+{
+  "name": "saveGame",
+  "version": "1.0.0",
+  "description": "保存游戏并更新玩家统计",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

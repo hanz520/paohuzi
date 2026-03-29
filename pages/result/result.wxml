@@ -1,0 +1,84 @@
+<!--pages/result/result.wxml-->
+<view class="container">
+  <!-- 顶部区域 -->
+  <view class="header">
+    <view class="trophy-icon">🏆</view>
+    <view class="title">游戏结束</view>
+    <view class="duration">游戏时长：{{formatTime(duration)}}</view>
+  </view>
+
+  <!-- 获胜者展示 -->
+  <view class="winner-section">
+    <view class="winner-card">
+      <view class="winner-avatar">
+        <text>{{getWinnerInitial()}}</text>
+      </view>
+      <view class="winner-name">{{winner}}</view>
+      <view class="winner-score">{{getWinnerScore()}}</view>
+      <view class="winner-badge">获胜</view>
+    </view>
+  </view>
+
+  <!-- 分数详情列表 -->
+  <view class="score-section">
+    <view class="section-title">分数详情</view>
+    
+    <view class="score-list">
+      <view class="score-item" wx:for="{{players}}" wx:key="name">
+        <view class="score-rank">{{item.rank}}</view>
+        <view class="score-player-info">
+          <view class="score-player-name">{{item.name}}</view>
+          <view class="score-details">
+            <text>原始分：{{item.rawScore}}</text>
+            <text>转换分：{{item.convertedScore}}</text>
+          </view>
+        </view>
+        <view class="score-final {{item.finalScore > 0 ? 'positive' : (item.finalScore < 0 ? 'negative' : '')}}">
+          {{item.finalScore > 0 ? '+' : ''}}{{item.finalScore}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 结算公式 -->
+  <view class="formula-section" bindtap="toggleFormula">
+    <view class="formula-title">
+      <text>📝 结算公式</text>
+      <text class="formula-arrow">{{showFormula ? '↑' : '↓'}}</text>
+    </view>
+    
+    <view class="formula-content" wx:if="{{showFormula}}">
+      <view class="formula-item">
+        <text class="formula-label">三人模式：</text>
+        <text>最终得分 = 转换分×2 - 其他玩家转换分之和</text>
+      </view>
+      <view class="formula-item">
+        <text class="formula-label">四人模式：</text>
+        <text>最终得分 = 转换分×3 - 其他玩家转换分之和</text>
+      </view>
+      <view class="formula-item">
+        <text class="formula-label">转换分数：</text>
+        <text>原始分÷10，向上取整</text>
+      </view>
+      <view class="formula-item zero-sum">
+        <text>零和验证：{{isZeroSum ? '✓' : '✗'}} 所有玩家最终得分之和 = {{totalScore}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据保存提示 -->
+  <view class="save-hint" wx:if="{{saved}}">
+    <text class="save-icon">✓</text>
+    <text>本局数据已保存到云端</text>
+  </view>
+
+  <!-- 按钮组 -->
+  <view class="action-section">
+    <button class="continue-btn" bindtap="onContinueGame">
+      继续游戏
+    </button>
+    <button class="home-btn" bindtap="onGoHome">
+      返回首页
+    </button>
+  </view>
+</view>

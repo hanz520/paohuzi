@@ -1,0 +1,103 @@
+<!--pages/history/history.wxml-->
+<view class="container">
+  <!-- 筛选区域 -->
+  <view class="filter-section">
+    <view class="filter-group">
+      <view 
+        class="filter-tag {{filterMode === 'all' ? 'active' : ''}}" 
+        bindtap="onFilterMode" 
+        data-mode="all"
+      >
+        全部
+      </view>
+      <view 
+        class="filter-tag {{filterMode === '3 人' ? 'active' : ''}}" 
+        bindtap="onFilterMode" 
+        data-mode="3 人"
+      >
+        三人
+      </view>
+      <view 
+        class="filter-tag {{filterMode === '4 人' ? 'active' : ''}}" 
+        bindtap="onFilterMode" 
+        data-mode="4 人"
+      >
+        四人
+      </view>
+    </view>
+    
+    <view class="filter-group">
+      <view 
+        class="filter-tag-small {{filterTime === 'all' ? 'active' : ''}}" 
+        bindtap="onFilterTime" 
+        data-time="all"
+      >
+        全部
+      </view>
+      <view 
+        class="filter-tag-small {{filterTime === '7days' ? 'active' : ''}}" 
+        bindtap="onFilterTime" 
+        data-time="7days"
+      >
+        7 天
+      </view>
+      <view 
+        class="filter-tag-small {{filterTime === '30days' ? 'active' : ''}}" 
+        bindtap="onFilterTime" 
+        data-time="30days"
+      >
+        30 天
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏记录列表 -->
+  <view class="game-list" wx:if="{{games.length > 0}}">
+    <view 
+      class="game-card" 
+      wx:for="{{games}}" 
+      wx:key="_id"
+      bindtap="onGameTap"
+      data-id="{{item._id}}"
+    >
+      <view class="game-header">
+        <view class="game-mode">{{item.mode}}模式</view>
+        <view class="game-time">{{formatTime(item.createTime)}}</view>
+      </view>
+      
+      <view class="game-players">
+        <view class="player-row" wx:for="{{item.players}}" wx:for-item="player" wx:key="name">
+          <view class="player-name {{player.isWinner ? 'winner' : ''}}">
+            {{player.isWinner ? '🏆 ' : ''}}{{player.name}}
+          </view>
+          <view class="player-score {{player.finalScore > 0 ? 'positive' : (player.finalScore < 0 ? 'negative' : '')}}">
+            {{player.finalScore > 0 ? '+' : ''}}{{player.finalScore}}
+          </view>
+        </view>
+      </view>
+      
+      <view class="game-footer">
+        <view class="game-winner">获胜：{{item.winner}}</view>
+        <view class="game-duration">时长：{{formatDuration(item.duration)}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{games.length > 0 && hasMore}}" bindtap="loadMore">
+    <text>加载更多</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{games.length === 0 && !loading}}">
+    <view class="empty-icon">📝</view>
+    <view class="empty-text">暂无游戏记录</view>
+    <view class="empty-hint">开始第一局游戏吧！</view>
+    <button class="start-game-btn" bindtap="onStartGame">开始游戏</button>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

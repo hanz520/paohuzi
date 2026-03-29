@@ -1,0 +1,55 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 标题区域 -->
+  <view class="header">
+    <view class="title">跑胡子计分助手</view>
+    <view class="subtitle">邵阳特色 · 好友对战 · 云端记录</view>
+  </view>
+
+  <!-- 模式选择区域 -->
+  <view class="mode-section">
+    <view class="section-title">选择游戏模式</view>
+    
+    <view class="mode-cards">
+      <!-- 三人模式 -->
+      <view class="mode-card" bindtap="onSelectMode" data-mode="3">
+        <view class="mode-icon">👥👥👥</view>
+        <view class="mode-name">三人模式</view>
+        <view class="mode-desc">经典玩法，独立计分</view>
+      </view>
+
+      <!-- 四人模式 -->
+      <view class="mode-card" bindtap="onSelectMode" data-mode="4">
+        <view class="mode-icon">👥👥👥👥</view>
+        <view class="mode-name">四人模式</view>
+        <view class="mode-desc">组队对战，策略竞技</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近游戏记录 -->
+  <view class="recent-section">
+    <view class="recent-header">
+      <view class="section-title">最近游戏</view>
+      <view class="more-link" bindtap="goToHistory">
+        查看全部 >
+      </view>
+    </view>
+    
+    <view class="recent-list" wx:if="{{recentGames.length > 0}}">
+      <view class="recent-item" wx:for="{{recentGames}}" wx:key="id" bindtap="viewGameDetail" data-id="{{item.id}}">
+        <view class="recent-mode">{{item.mode}}模式</view>
+        <view class="recent-info">
+          <view class="recent-winner">获胜：{{item.winner}}</view>
+          <view class="recent-time">{{item.time}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-recent" wx:else>
+      <view class="empty-icon">📝</view>
+      <view class="empty-text">暂无游戏记录</view>
+      <view class="empty-hint">开始第一局游戏吧！</view>
+    </view>
+  </view>
+</view>

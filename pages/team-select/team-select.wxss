@@ -1,0 +1,196 @@
+/* pages/team-select/team-select.wxss */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  padding: 40rpx;
+  padding-bottom: 120rpx;
+}
+
+/* 头部 */
+.header {
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 玩家列表区域 */
+.player-section {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+}
+
+.section-tip {
+  text-align: center;
+  font-size: 30rpx;
+  color: #667eea;
+  font-weight: 600;
+  margin-bottom: 32rpx;
+  padding: 16rpx;
+  background-color: #f0f4ff;
+  border-radius: 12rpx;
+}
+
+.player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.player-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.player-card:active {
+  transform: scale(0.98);
+}
+
+.player-card.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+}
+
+/* 选择标识 */
+.select-icon {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  width: 48rpx;
+  height: 48rpx;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-icon text {
+  font-size: 32rpx;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.player-card.selected .select-icon text {
+  color: #ffffff;
+}
+
+/* 玩家头像 */
+.player-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.avatar-text {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.player-card.selected .avatar-text {
+  color: #ffffff;
+}
+
+/* 玩家名字 */
+.player-name {
+  flex: 1;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.player-card.selected .player-name {
+  color: #ffffff;
+}
+
+/* 队友标识 */
+.team-badge {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+/* 组队说明 */
+.info-section {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+}
+
+.info-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.info-item {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 确认按钮 */
+.action-section {
+  position: fixed;
+  bottom: 40rpx;
+  left: 40rpx;
+  right: 40rpx;
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 32rpx 0;
+  border-radius: 16rpx;
+  font-size: 34rpx;
+  font-weight: bold;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+}
+
+.confirm-btn.enabled {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+}
+
+.confirm-btn.disabled {
+  background-color: #cccccc;
+  color: #999999;
+  box-shadow: none;
+}

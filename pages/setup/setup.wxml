@@ -1,0 +1,92 @@
+<!--pages/setup/setup.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="header">
+    <view class="title">设置玩家</view>
+    <view class="mode-badge">{{mode === '3' ? '三人模式' : '四人模式'}}</view>
+  </view>
+
+  <!-- 玩家选择区域 -->
+  <view class="players-section">
+    <view class="player-item" wx:for="{{playerCount}}" wx:key="index">
+      <view class="player-card {{players[index].selected ? 'selected' : ''}}" bindtap="onPlayerCardTap" data-index="{{index}}">
+        <!-- 头像占位 -->
+        <view class="player-avatar">
+          <text class="avatar-text">{{players[index].selected ? getPlayerInitial(players[index].name) : index + 1}}</text>
+        </view>
+        
+        <!-- 玩家名字 -->
+        <view class="player-info">
+          <view class="player-name">{{players[index].selected ? players[index].name : '玩家' + (index + 1)}}</view>
+          <view class="player-hint" wx:if="{{!players[index].selected}}">点击选择玩家</view>
+        </view>
+        
+        <!-- 操作按钮 -->
+        <view class="player-actions" wx:if="{{players[index].selected}}">
+          <view class="action-btn change" catchtap="onChangePlayer" data-index="{{index}}">更换</view>
+          <view class="action-btn clear" catchtap="onClearPlayer" data-index="{{index}}">清空</view>
+        </view>
+        <view class="select-hint" wx:else>选择</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 开始游戏按钮 -->
+  <view class="action-section">
+    <button 
+      class="start-btn {{canStart ? 'enabled' : 'disabled'}}" 
+      disabled="{{!canStart}}"
+      bindtap="onStartGame"
+    >
+      开始游戏
+    </button>
+  </view>
+
+  <!-- 历史玩家选择弹窗 -->
+  <view class="modal {{showPlayerSelector ? 'show' : ''}}" bindtap="onModalMaskTap">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <view class="modal-title">选择玩家</view>
+        <view class="modal-close" bindtap="closePlayerSelector">✕</view>
+      </view>
+      
+      <!-- 搜索框 -->
+      <view class="search-box">
+        <input 
+          class="search-input" 
+          placeholder="搜索玩家名字..." 
+          value="{{searchText}}"
+          bindinput="onSearchInput"
+        />
+      </view>
+      
+      <!-- 玩家列表 -->
+      <scroll-view class="player-list" scroll-y>
+        <view 
+          class="history-player-item" 
+          wx:for="{{filteredPlayers}}" 
+          wx:key="_id"
+          bindtap="onSelectHistoryPlayer"
+          data-name="{{item.nickname}}"
+        >
+          <view class="history-player-avatar">
+            <text>{{item.nickname.charAt(0).toUpperCase()}}</text>
+          </view>
+          <view class="history-player-name">{{item.nickname}}</view>
+          <view class="history-player-stats" wx:if="{{item.totalGames}}">
+            <text>{{item.totalGames}}局</text>
+            <text wx:if="{{item.totalWins}}"> 胜率{{Math.round(item.totalWins / item.totalGames * 100)}}%</text>
+          </view>
+        </view>
+        
+        <view class="empty-list" wx:if="{{filteredPlayers.length === 0}}">
+          <text>暂无历史玩家</text>
+        </view>
+      </scroll-view>
+      
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="closePlayerSelector">取消</button>
+      </view>
+    </view>
+  </view>
+</view>

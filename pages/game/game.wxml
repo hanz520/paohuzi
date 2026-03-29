@@ -1,0 +1,72 @@
+<!--pages/game/game.wxml-->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="top-bar">
+    <view class="mode-badge">{{mode}}模式</view>
+    <view class="timer">{{formatTime(timerSeconds)}}</view>
+  </view>
+
+  <!-- 玩家卡片区域 -->
+  <view class="players-section">
+    <view class="player-card" wx:for="{{players}}" wx:key="index" bindtap="onPlayerCardTap" data-index="{{index}}">
+      <!-- 头像 -->
+      <view class="player-avatar">
+        <text class="avatar-text">{{getPlayerInitial(item.name)}}</text>
+      </view>
+      
+      <!-- 玩家信息 -->
+      <view class="player-info">
+        <view class="player-name">{{item.name}}</view>
+        <view class="player-score">{{item.rawScore}}</view>
+        <view class="team-tag" wx:if="{{mode === '4 人' && getTeamIndex(index) === 0}}">队伍 1</view>
+        <view class="team-tag team2" wx:if="{{mode === '4 人' && getTeamIndex(index) === 1}}">队伍 2</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <button class="action-btn undo" bindtap="onUndo" disabled="{{!canUndo}}">
+      <text>撤销</text>
+    </button>
+    <button class="action-btn end" bindtap="onEndGame">
+      <text>结束游戏</text>
+    </button>
+  </view>
+
+  <!-- 计分输入弹窗 -->
+  <view class="modal {{showScoreInput ? 'show' : ''}}" bindtap="onModalMaskTap">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <view class="modal-title">{{currentPlayerName}} - 计分</view>
+        <view class="modal-close" bindtap="closeScoreInput">✕</view>
+      </view>
+      
+      <view class="score-input-section">
+        <input 
+          class="score-input" 
+          type="number" 
+          placeholder="请输入分数（≥10）"
+          value="{{inputScore}}"
+          bindinput="onScoreInput"
+          focus="{{showScoreInput}}"
+        />
+        <view class="input-hint" wx:if="{{inputScore && inputScore < 10}}">
+          ⚠ 分数必须大于等于 10
+        </view>
+      </view>
+      
+      <view class="modal-buttons">
+        <button class="confirm-btn" disabled="{{!canConfirmScore}}" bindtap="onConfirmScore">
+          确认加分
+        </button>
+        <button class="liuju-btn" wx:if="{{mode === '4 人'}}" bindtap="onLiuJu">
+          流局（-10 分）
+        </button>
+        <button class="cancel-btn" bindtap="closeScoreInput">
+          取消
+        </button>
+      </view>
+    </view>
+  </view>
+</view>
