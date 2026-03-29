@@ -10,7 +10,12 @@ Page({
     currentPlayerIndex: -1, // 当前正在选择的玩家索引
     allPlayers: [], // 所有历史玩家
     filteredPlayers: [], // 筛选后的玩家
-    searchText: ''
+    searchText: '',
+    
+    // 新建玩家相关
+    newPlayerName: '',
+    canAddNewPlayer: false,
+    showDuplicateHint: false
   },
 
   onLoad: function (options) {
@@ -129,6 +134,46 @@ Page({
       : allPlayers;
     
     this.setData({ filteredPlayers, searchText });
+  },
+
+  /**
+   * 新建玩家名字输入
+   */
+  onNewPlayerInput(e) {
+    const name = e.detail.value.trim();
+    const allPlayers = this.data.allPlayers;
+    
+    // 检查是否已存在
+    const exists = allPlayers.some(p => p.nickname === name);
+    
+    this.setData({
+      newPlayerName: name,
+      canAddNewPlayer: name.length > 0 && !exists,
+      showDuplicateHint: exists && name.length > 0
+    });
+  },
+
+  /**
+   * 添加新玩家
+   */
+  onAddNewPlayer() {
+    const name = this.data.newPlayerName.trim();
+    
+    if (!name || !this.data.canAddNewPlayer) return;
+    
+    // 选择刚创建的玩家
+    this.onSelectHistoryPlayer({
+      currentTarget: {
+        dataset: { name }
+      }
+    });
+    
+    // 清空输入
+    this.setData({
+      newPlayerName: '',
+      canAddNewPlayer: false,
+      showDuplicateHint: false
+    });
   },
 
   /**

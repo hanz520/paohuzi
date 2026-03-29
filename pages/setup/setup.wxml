@@ -62,6 +62,32 @@
       
       <!-- 玩家列表 -->
       <scroll-view class="player-list" scroll-y>
+        <!-- 新建玩家输入框 -->
+        <view class="new-player-section">
+          <view class="section-label">➕ 新建玩家</view>
+          <view class="new-player-input">
+            <input 
+              class="input-field" 
+              placeholder="输入玩家名字，点击添加"
+              value="{{newPlayerName}}"
+              bindinput="onNewPlayerInput"
+              bindconfirm="onAddNewPlayer"
+            />
+            <button 
+              class="add-btn" 
+              disabled="{{!canAddNewPlayer}}"
+              bindtap="onAddNewPlayer"
+            >
+              添加
+            </button>
+          </view>
+          <view class="duplicate-hint" wx:if="{{showDuplicateHint}}">
+            ⚠ 该玩家已存在，请直接选择
+          </view>
+        </view>
+        
+        <!-- 历史玩家列表 -->
+        <view class="list-label">📋 历史玩家</view>
         <view 
           class="history-player-item" 
           wx:for="{{filteredPlayers}}" 
@@ -79,8 +105,9 @@
           </view>
         </view>
         
-        <view class="empty-list" wx:if="{{filteredPlayers.length === 0}}">
+        <view class="empty-list" wx:if="{{filteredPlayers.length === 0 && !newPlayerName}}">
           <text>暂无历史玩家</text>
+          <text class="hint">在上方输入名字创建新玩家</text>
         </view>
       </scroll-view>
       

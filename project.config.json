@@ -1,5 +1,5 @@
 {
-  "description": "跑胡子计分助手微信小程序",
+  "description": "hanz计分助手",
   "packOptions": {
     "ignore": [],
     "include": []
@@ -35,10 +35,17 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "compileWorklet": false,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.19.4",
+  "libVersion": "2.25.0",
   "appid": "wx3ed107a0970a9046",
   "projectname": "paohuzi-scoring",
   "cloudfunctionRoot": "cloudfunctions/",
@@ -47,5 +54,6 @@
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "simulatorPluginLibVersion": {}
 }
