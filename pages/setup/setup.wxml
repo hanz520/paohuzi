@@ -8,8 +8,8 @@
 
   <!-- 玩家选择区域 -->
   <view class="players-section">
-    <view class="player-item" wx:for="{{playerCount}}" wx:key="index">
-      <view class="player-card {{players[index].selected ? 'selected' : ''}}" bindtap="onPlayerCardTap" data-index="{{index}}">
+    <view class="player-item" wx:for="{{playerCount}}" wx:key="index" bindtap="onPlayerCardTap" data-index="{{index}}">
+      <view class="player-card {{players[index].selected ? 'selected' : ''}}">
         
         <!-- 玩家名字 -->
         <view class="player-info">
