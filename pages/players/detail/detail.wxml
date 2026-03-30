@@ -1,0 +1,114 @@
+<!--pages/players/detail/detail.wxml-->
+<wxs module="utils">
+  function formatTime(dateStr) {
+    if (!dateStr) return '';
+    var date = getDate(dateStr);
+    var year = date.getFullYear();
+    var month = (date.getMonth() + 1);
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    return year + '/' + 
+           (month < 10 ? '0' : '') + month + '/' + 
+           (day < 10 ? '0' : '') + day + ' ' + 
+           (hour < 10 ? '0' : '') + hour + ':' + 
+           (minute < 10 ? '0' : '') + minute;
+  }
+  
+  function formatDuration(seconds) {
+    if (!seconds || seconds < 0) return '0 分 00 秒';
+    var hours = Math.floor(seconds / 3600);
+    var mins = Math.floor((seconds % 3600) / 60);
+    var secs = seconds % 60;
+    
+    if (hours > 0) {
+      return hours + '小时' + mins + '分' + secs + '秒';
+    } else {
+      return mins + '分' + (secs < 10 ? '0' : '') + secs + '秒';
+    }
+  }
+  
+  module.exports = {
+    formatTime: formatTime,
+    formatDuration: formatDuration
+  };
+</wxs>
+
+<view class="container">
+  <!-- 玩家信息卡片 -->
+  <view class="player-card">
+    <view class="player-avatar">{{getInitial(player.nickname)}}</view>
+    <view class="player-name">{{player.nickname}}</view>
+    
+    <view class="player-stats">
+      <view class="stat-card">
+        <view class="stat-value">{{player.totalGames}}</view>
+        <view class="stat-label">游戏次数</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-value win">{{player.winRate}}%</view>
+        <view class="stat-label">胜率</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-value {{player.totalScore >= 0 ? 'positive' : 'negative'}}">
+          {{player.totalScore > 0 ? '+' : ''}}{{player.totalScore}}
+        </view>
+        <view class="stat-label">得分总和</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏记录 -->
+  <view class="games-section">
+    <view class="section-title">📊 游戏记录</view>
+    
+    <view class="game-list" wx:if="{{games.length > 0}}">
+      <view class="game-card" wx:for="{{games}}" wx:key="_id" bindtap="onGameTap" data-id="{{item._id}}">
+        <!-- 第一行：模式和时间 -->
+        <view class="game-header">
+          <view class="game-mode">{{item.mode}}模式</view>
+          <view class="game-time">{{utils.formatTime(item.createTime)}}</view>
+        </view>
+        
+        <!-- 第二部分：表格显示玩家和得分 -->
+        <view class="game-table">
+          <!-- 表格第一行：玩家名字 -->
+          <view class="table-row player-names">
+            <view class="table-cell player-name" wx:for="{{item.players}}" wx:for-item="player" wx:key="name">
+              {{player.name}}
+            </view>
+          </view>
+          <!-- 表格第二行：最终得分 -->
+          <view class="table-row player-scores">
+            <view class="table-cell player-score {{player.finalScore > 0 ? 'positive' : (player.finalScore < 0 ? 'negative' : '')}}" 
+                  wx:for="{{item.players}}" wx:for-item="player" wx:key="name">
+              {{player.finalScore > 0 ? '+' : ''}}{{player.finalScore}}
+            </view>
+          </view>
+        </view>
+        
+        <!-- 第三部分：获胜者和游戏时长 -->
+        <view class="game-footer">
+          <view class="game-winner">🏆 {{item.winner}}</view>
+          <view class="game-duration">⏱ {{utils.formatDuration(item.duration)}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{games.length === 0 && !loading}}">
+      <view class="empty-icon">📝</view>
+      <view class="empty-text">暂无游戏记录</view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{games.length > 0 && hasMore}}" bindtap="loadMore">
+      <text>加载更多</text>
+    </view>
+  </view>
+</view>

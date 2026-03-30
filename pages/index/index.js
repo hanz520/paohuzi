@@ -3,17 +3,21 @@ const cloud = require('../../utils/cloud');
 
 Page({
   data: {
-    recentGames: []
+    recentGames: [],
+    activePlayers: []
   },
 
   onLoad: function () {
     // 加载最近游戏记录
     this.loadRecentGames();
+    // 加载活跃玩家
+    this.loadActivePlayers();
   },
 
   onShow: function () {
     // 每次显示时刷新最近游戏记录
     this.loadRecentGames();
+    this.loadActivePlayers();
   },
 
   /**
@@ -80,6 +84,33 @@ Page({
   },
 
   /**
+   * 加载活跃玩家
+   */
+  loadActivePlayers: function () {
+    const that = this;
+    
+    wx.cloud.callFunction({
+      name: 'getPlayers',
+      data: {
+        page: 1,
+        pageSize: 4,
+        sortBy: 'games',
+        sortOrder: 'desc'
+      },
+      success: function (res) {
+        if (res.result && res.result.success) {
+          that.setData({
+            activePlayers: res.result.players
+          });
+        }
+      },
+      fail: function (err) {
+        console.log('加载活跃玩家失败', err);
+      }
+    });
+  },
+
+  /**
    * 格式化时间
    */
   formatTime: function (date) {
@@ -114,11 +145,28 @@ Page({
   },
 
   /**
+   * 获取名字首字母
+   */
+  getInitial: function (name) {
+    if (!name) return '';
+    return name.charAt(0).toUpperCase();
+  },
+
+  /**
    * 跳转到历史记录页
    */
   goToHistory: function () {
     wx.navigateTo({
       url: '/pages/history/history'
+    });
+  },
+
+  /**
+   * 跳转到玩家列表页
+   */
+  goToPlayers: function () {
+    wx.navigateTo({
+      url: '/pages/players/index/index'
     });
   },
 
@@ -130,6 +178,17 @@ Page({
     
     wx.navigateTo({
       url: `/pages/result/result?gameId=${gameId}&from=home`
+    });
+  },
+
+  /**
+   * 查看玩家详情
+   */
+  viewPlayerDetail: function (e) {
+    const playerId = e.currentTarget.dataset.id;
+    
+    wx.navigateTo({
+      url: `/pages/players/detail/detail?id=${playerId}`
     });
   }
 });

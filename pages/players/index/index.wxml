@@ -1,0 +1,63 @@
+<!--pages/players/index/index.wxml-->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="title">玩家列表</view>
+  </view>
+
+  <!-- 排序按钮 -->
+  <view class="sort-section">
+    <view class="sort-btn {{sortBy === 'games' ? 'active' : ''}}" bindtap="onSort" data-sort="games">
+      <text>游戏次数</text>
+      <text class="sort-arrow">{{sortBy === 'games' ? (sortOrder === 'desc' ? '↓' : '↑') : ''}}</text>
+    </view>
+    <view class="sort-btn {{sortBy === 'winrate' ? 'active' : ''}}" bindtap="onSort" data-sort="winrate">
+      <text>胜率</text>
+      <text class="sort-arrow">{{sortBy === 'winrate' ? (sortOrder === 'desc' ? '↓' : '↑') : ''}}</text>
+    </view>
+    <view class="sort-btn {{sortBy === 'score' ? 'active' : ''}}" bindtap="onSort" data-sort="score">
+      <text>得分总和</text>
+      <text class="sort-arrow">{{sortBy === 'score' ? (sortOrder === 'desc' ? '↓' : '↑') : ''}}</text>
+    </view>
+  </view>
+
+  <!-- 玩家列表 -->
+  <view class="player-list" wx:if="{{players.length > 0}}">
+    <view class="player-item" wx:for="{{players}}" wx:key="_id" bindtap="onPlayerTap" data-id="{{item._id}}">
+      <view class="player-info">
+        <view class="player-name">{{item.nickname}}</view>
+        <view class="player-stats">
+          <view class="stat-item">
+            <text class="stat-label">游戏次数</text>
+            <text class="stat-value">{{item.totalGames}}</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-label">胜率</text>
+            <text class="stat-value win">{{item.winRate}}%</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-label">得分总和</text>
+            <text class="stat-value {{item.totalScore >= 0 ? 'positive' : 'negative'}}">{{item.totalScore > 0 ? '+' : ''}}{{item.totalScore}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="arrow-icon">›</view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{players.length === 0 && !loading}}">
+    <view class="empty-icon">👥</view>
+    <view class="empty-text">暂无玩家数据</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{players.length > 0 && hasMore}}" bindtap="loadMore">
+    <text>加载更多</text>
+  </view>
+</view>

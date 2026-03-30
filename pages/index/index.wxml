@@ -52,4 +52,35 @@
       <view class="empty-hint">开始第一局游戏吧！</view>
     </view>
   </view>
+
+  <!-- 活跃玩家 -->
+  <view class="active-players-section">
+    <view class="active-header">
+      <view class="section-title"> 活跃玩家</view>
+      <view class="more-link" bindtap="goToPlayers">
+        查看全部 >
+      </view>
+    </view>
+    
+    <view class="active-list" wx:if="{{activePlayers.length > 0}}">
+      <view class="active-player" wx:for="{{activePlayers}}" wx:key="_id" bindtap="viewPlayerDetail" data-id="{{item._id}}">
+        <view class="active-avatar">{{getInitial(item.nickname)}}</view>
+        <view class="active-info">
+          <view class="active-name">{{item.nickname}}</view>
+          <view class="active-stats">
+            <text class="stat">🎮 {{item.totalGames}}局</text>
+            <text class="stat win">🏆 {{item.winRate}}%</text>
+          </view>
+        </view>
+        <view class="active-score {{item.totalScore >= 0 ? 'positive' : 'negative'}}">
+          {{item.totalScore > 0 ? '+' : ''}}{{item.totalScore}}
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-active" wx:else>
+      <view class="empty-icon">👥</view>
+      <view class="empty-text">暂无活跃玩家</view>
+    </view>
+  </view>
 </view>

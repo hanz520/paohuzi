@@ -149,6 +149,113 @@
   color: #999;
 }
 
+/* 活跃玩家区域 */
+.active-players-section {
+  margin-top: 20rpx;
+}
+
+.active-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.active-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.active-player {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.active-player:active {
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.active-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.active-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.active-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.active-stats {
+  display: flex;
+  gap: 24rpx;
+}
+
+.stat {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.stat.win {
+  color: #667eea;
+}
+
+.active-score {
+  font-size: 32rpx;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+}
+
+.active-score.positive {
+  color: #52c41a;
+}
+
+.active-score.negative {
+  color: #f5222d;
+}
+
+/* 空状态 */
+.empty-active {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+}
+
+.empty-active .empty-icon {
+  font-size: 100rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.5;
+}
+
+.empty-active .empty-text {
+  font-size: 32rpx;
+  color: #999;
+}
+
 /* 空状态 */
 .empty-recent {
   text-align: center;
