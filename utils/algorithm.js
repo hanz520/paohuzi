@@ -153,28 +153,37 @@ function handleLiuJu(playerIndex, teams) {
 /**
  * 游戏结束判定
  * @param {Array} players - 玩家数组
- * @param {Number} currentScorerId - 当前得分玩家 ID
+ * @param {Number} currentScorerId - 当前得分玩家索引
  * @returns {Object} 是否应该结束
  */
 function checkGameEnd(players, currentScorerId) {
   // 找出所有超过 100 分的玩家
-  const playersOver100 = players.filter(p => p.rawScore > 100);
+  const playersOver100 = players
+    .map((p, index) => ({ ...p, index }))
+    .filter(p => p.rawScore >= 100);
   
-  // 如果没有玩家超过 100 分，不结束
+  // 如果没有玩家达到 100 分，不结束
   if (playersOver100.length === 0) {
     return { shouldEnd: false };
   }
   
-  // 检查当前得分玩家是否是超过 100 分的玩家之一
-  const isCurrentScorerOver100 = playersOver100.some(p => p.id === currentScorerId);
+  // 获取达到 100 分的玩家索引列表
+  const over100Indices = playersOver100.map(p => p.index);
   
-  // 只有当另一名玩家（不是超过 100 分的玩家）得分时才结束
-  // 如果当前得分玩家已经是超过 100 分的玩家，继续累加不触发结算
-  if (!isCurrentScorerOver100) {
+  // 检查当前得分玩家是否是达到 100 分的玩家之一
+  const isCurrentScorerOver100 = over100Indices.includes(currentScorerId);
+  
+  // 逻辑：
+  // 1. 如果当前得分玩家已经达到 100 分，可以继续累加，不触发结算
+  // 2. 如果当前得分玩家没有达到 100 分，但已经有其他玩家达到 100 分了，触发结算
+  //    （意味着达到 100 分的玩家没有继续得分，而其他玩家赢了一局）
+  if (isCurrentScorerOver100) {
+    // 达到 100 分的玩家继续得分，不结束
+    return { shouldEnd: false };
+  } else {
+    // 没有达到 100 分的玩家得分了，而有人已经达到 100 分，结束游戏
     return { shouldEnd: true, reason: 'auto' };
   }
-  
-  return { shouldEnd: false };
 }
 
 /**
