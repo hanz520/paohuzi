@@ -129,7 +129,7 @@ Page({
     const gameId = e.currentTarget.dataset.id;
     
     wx.navigateTo({
-      url: `/pages/history/history?detail=${gameId}`
+      url: `/pages/result/result?gameId=${gameId}&from=home`
     });
   }
 });

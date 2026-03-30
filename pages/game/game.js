@@ -373,6 +373,7 @@ Page({
         winner: settlement.winner,
         mvp: settlement.mvp,
         duration: this.data.timerSeconds,
+        scoreRows: this.data.scoreRows, // 添加游戏过程记录
         createTime: new Date(),
         settlement: {
           algorithm: this.data.mode === '3 人' 
@@ -397,6 +398,7 @@ Page({
         ...settlement,
         mode: this.data.mode,
         duration: this.data.timerSeconds,
+        scoreRows: this.data.scoreRows,
         saved: true,
         saveTime: new Date()
       };

@@ -118,10 +118,9 @@ Page({
    */
   onGameTap(e) {
     const gameId = e.currentTarget.dataset.id;
-    // TODO: 跳转到详情页
-    wx.showToast({
-      title: '详情页开发中',
-      icon: 'none'
+    // 跳转到详情页
+    wx.navigateTo({
+      url: `/pages/result/result?gameId=${gameId}&from=history`
     });
   },
 
