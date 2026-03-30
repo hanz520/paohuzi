@@ -157,14 +157,20 @@ function handleLiuJu(playerIndex, teams) {
  * @returns {Object} 是否应该结束
  */
 function checkGameEnd(players, currentScorerId) {
-  const playerOver100 = players.find(p => p.rawScore > 100);
+  // 找出所有超过 100 分的玩家
+  const playersOver100 = players.filter(p => p.rawScore > 100);
   
-  if (!playerOver100) {
+  // 如果没有玩家超过 100 分，不结束
+  if (playersOver100.length === 0) {
     return { shouldEnd: false };
   }
   
-  // 超过 100 分后，另一名玩家得分时才结束
-  if (currentScorerId !== playerOver100.id) {
+  // 检查当前得分玩家是否是超过 100 分的玩家之一
+  const isCurrentScorerOver100 = playersOver100.some(p => p.id === currentScorerId);
+  
+  // 只有当另一名玩家（不是超过 100 分的玩家）得分时才结束
+  // 如果当前得分玩家已经是超过 100 分的玩家，继续累加不触发结算
+  if (!isCurrentScorerOver100) {
     return { shouldEnd: true, reason: 'auto' };
   }
   
