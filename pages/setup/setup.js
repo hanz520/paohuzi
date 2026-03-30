@@ -73,7 +73,12 @@ Page({
       this.filterAvailablePlayers();
       this.setData({
         currentPlayerIndex: index,
-        showPlayerSelector: true
+        showPlayerSelector: true,
+        currentTab: 'history', // 确保打开弹窗时默认显示历史玩家 Tab
+        searchText: '',
+        newPlayerName: '',
+        canAddNewPlayer: false,
+        showDuplicateHint: false
       });
     }
   },
@@ -87,7 +92,12 @@ Page({
     this.filterAvailablePlayers(index);
     this.setData({
       currentPlayerIndex: index,
-      showPlayerSelector: true
+      showPlayerSelector: true,
+      currentTab: 'history', // 确保打开弹窗时默认显示历史玩家 Tab
+      searchText: '',
+      newPlayerName: '',
+      canAddNewPlayer: false,
+      showDuplicateHint: false
     });
   },
 
