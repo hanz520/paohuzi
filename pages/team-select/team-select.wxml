@@ -3,7 +3,7 @@
   <!-- 页面标题 -->
   <view class="header">
     <view class="title">选择队友</view>
-    <view class="subtitle">请选择 2 名玩家作为你的队友</view>
+    <view class="subtitle">请选择 2 名玩家组成队友</view>
   </view>
 
   <!-- 玩家列表 -->
