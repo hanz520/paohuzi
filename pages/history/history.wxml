@@ -16,11 +16,13 @@
   function formatTime(dateStr) {
     if (!dateStr) return '';
     var date = getDate(dateStr);
+    var year = date.getFullYear();
     var month = (date.getMonth() + 1);
     var day = date.getDate();
     var hour = date.getHours();
     var minute = date.getMinutes();
-    return (month < 10 ? '0' : '') + month + '/' + 
+    return year + '/' + 
+           (month < 10 ? '0' : '') + month + '/' + 
            (day < 10 ? '0' : '') + day + ' ' + 
            (hour < 10 ? '0' : '') + hour + ':' + 
            (minute < 10 ? '0' : '') + minute;
@@ -93,25 +95,33 @@
       bindtap="onGameTap"
       data-id="{{item._id}}"
     >
+      <!-- 第一行：模式和时间 -->
       <view class="game-header">
         <view class="game-mode">{{item.mode}}模式</view>
         <view class="game-time">{{utils.formatTime(item.createTime)}}</view>
       </view>
       
-      <view class="game-players">
-        <view class="player-row" wx:for="{{item.players}}" wx:for-item="player" wx:key="name">
-          <view class="player-name {{player.isWinner ? 'winner' : ''}}">
-            {{player.isWinner ? '🏆 ' : ''}}{{player.name}}
+      <!-- 第二部分：表格显示玩家和得分 -->
+      <view class="game-table">
+        <!-- 表格第一行：玩家名字 -->
+        <view class="table-row player-names">
+          <view class="table-cell player-name" wx:for="{{item.players}}" wx:for-item="player" wx:key="name">
+            {{player.name}}
           </view>
-          <view class="player-score {{player.finalScore > 0 ? 'positive' : (player.finalScore < 0 ? 'negative' : '')}}">
+        </view>
+        <!-- 表格第二行：最终得分 -->
+        <view class="table-row player-scores">
+          <view class="table-cell player-score {{player.finalScore > 0 ? 'positive' : (player.finalScore < 0 ? 'negative' : '')}}" 
+                wx:for="{{item.players}}" wx:for-item="player" wx:key="name">
             {{player.finalScore > 0 ? '+' : ''}}{{player.finalScore}}
           </view>
         </view>
       </view>
       
+      <!-- 第三部分：获胜者和游戏时长 -->
       <view class="game-footer">
-        <view class="game-winner">获胜：{{item.winner}}</view>
-        <view class="game-duration">时长：{{utils.formatDuration(item.duration)}}</view>
+        <view class="game-winner">🏆 {{item.winner}}</view>
+        <view class="game-duration">⏱ {{utils.formatDuration(item.duration)}}</view>
       </view>
     </view>
   </view>
