@@ -13,7 +13,8 @@ Page({
     
     this.setData({ 
       players,
-      teamSelector: new TeamSelector(players)
+      teamSelector: new TeamSelector(players),
+      isSelectedMap: players.map(() => false) // 初始化选中状态映射
     });
   },
 
@@ -31,9 +32,13 @@ Page({
     const selectedIndices = teamSelector.selectedIndices;
     const canConfirm = teamSelector.canConfirm();
     
+    // 构建选中状态映射，方便 WXML 直接使用
+    const isSelectedMap = this.data.players.map((_, idx) => selectedIndices.includes(idx));
+    
     this.setData({
       selectedIndices,
-      canConfirm
+      canConfirm,
+      isSelectedMap
     });
   },
 
@@ -41,7 +46,7 @@ Page({
    * 判断是否选中
    */
   isSelected(index) {
-    return this.data.selectedIndices.includes(index);
+    return this.data.isSelectedMap ? this.data.isSelectedMap[index] : false;
   },
 
   /**

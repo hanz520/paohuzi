@@ -12,14 +12,14 @@
     
     <view class="player-list">
       <view 
-        class="player-card {{isSelected(index) ? 'selected' : ''}}" 
+        class="player-card {{isSelectedMap[index] ? 'selected' : ''}}" 
         wx:for="{{players}}" 
         wx:key="index"
         bindtap="onPlayerTap"
         data-index="{{index}}"
       >
         <!-- 选择标识 -->
-        <view class="select-icon" wx:if="{{isSelected(index)}}">
+        <view class="select-icon" wx:if="{{isSelectedMap[index]}}">
           <text>✓</text>
         </view>
         
@@ -32,7 +32,7 @@
         <view class="player-name">{{item}}</view>
         
         <!-- 队友标识 -->
-        <view class="team-badge" wx:if="{{isSelected(index)}}">队友</view>
+        <view class="team-badge" wx:if="{{isSelectedMap[index]}}">队友</view>
       </view>
     </view>
   </view>
