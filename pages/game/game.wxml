@@ -6,17 +6,35 @@
     <view class="timer">{{formatTime(timerSeconds)}}</view>
   </view>
 
-  <!-- 玩家卡片区域 -->
-  <view class="players-section">
-    <view class="player-card" wx:for="{{players}}" wx:key="index" bindtap="onPlayerCardTap" data-index="{{index}}">
+  <!-- 积分表格 -->
+  <view class="score-table-container">
+    <!-- 表头（玩家名字） -->
+    <view class="table-header">
+      <view class="header-row">
+        <view class="header-cell" wx:for="{{players}}" wx:key="index" bindtap="onPlayerHeaderTap" data-index="{{index}}">
+          <text class="player-name-text">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
     
-      
-      <!-- 玩家信息 -->
-      <view class="player-info">
-        <view class="player-name">{{item.name}}</view>
-        <view class="player-score">{{item.rawScore}}</view>
-        <view class="team-tag" wx:if="{{mode === '4 人' && getTeamIndex(index) === 0}}">队伍 1</view>
-        <view class="team-tag team2" wx:if="{{mode === '4 人' && getTeamIndex(index) === 1}}">队伍 2</view>
+    <!-- 表格内容（得分记录） -->
+    <scroll-view class="table-body" scroll-y scroll-into-view="{{scrollToView}}">
+      <view class="score-row" wx:for="{{scoreRows}}" wx:key="id" id="row-{{item.id}}">
+        <view class="score-cell" wx:for="{{item.scores}}" wx:key="playerIdx" wx:for-item="score" wx:for-index="playerIdx">
+          <text class="score-value {{score > 0 ? 'positive' : (score < 0 ? 'negative' : '')}}">{{score > 0 ? '+' + score : score}}</text>
+        </view>
+      </view>
+      <view wx:if="{{scoreRows.length === 0}}" class="empty-hint">
+        <text>点击上方玩家名字开始计分</text>
+      </view>
+    </scroll-view>
+    
+    <!-- 表尾（总分） -->
+    <view class="table-footer">
+      <view class="footer-row">
+        <view class="footer-cell" wx:for="{{players}}" wx:key="index">
+          <text class="total-score {{item.rawScore >= 0 ? 'positive' : 'negative'}}">{{item.rawScore}}</text>
+        </view>
       </view>
     </view>
   </view>
@@ -30,8 +48,6 @@
       <text>结束游戏</text>
     </button>
   </view>
-
-  <!-- 计分输入弹窗 -->
   <view class="modal {{showScoreInput ? 'show' : ''}}" bindtap="onModalMaskTap">
     <view class="modal-content" catchtap="stopPropagation">
       <view class="modal-header">

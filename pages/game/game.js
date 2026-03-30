@@ -8,6 +8,8 @@ Page({
     players: [], // [{ name: '', rawScore: 0 }]
     teams: [], // [[0, 2], [1, 3]]
     scoreRecords: [], // 计分记录
+    scoreRows: [], // 表格行数据 [{id: 1, scores: [10, 0, 20]}]
+    scrollToView: '', // 滚动到指定行
     timerSeconds: 0,
     timer: null,
     
@@ -49,6 +51,7 @@ Page({
         players: gameState.players,
         teams: gameState.teams || [],
         scoreRecords: gameState.scoreRecords || [],
+        scoreRows: this.buildScoreRows(gameState.scoreRecords || []),
         canUndo: (gameState.scoreRecords || []).length > 0
       });
     }
@@ -108,9 +111,54 @@ Page({
   },
 
   /**
-   * 玩家卡片点击
+   * 构建表格行数据
    */
-  onPlayerCardTap(e) {
+  buildScoreRows(scoreRecords) {
+    return scoreRecords.map((record, index) => ({
+      id: index + 1,
+      scores: this.data.players.map((_, playerIdx) => {
+        if (playerIdx === record.playerId) {
+          return record.score;
+        }
+        // 流局模式需要计算其他玩家的分数
+        if (record.type === 'liuju' && this.data.teams.length > 0) {
+          const scoreChanges = this.calculateLiuJuScores(record.playerId, this.data.teams);
+          return scoreChanges[playerIdx] || 0;
+        }
+        return 0;
+      })
+    }));
+  },
+
+  /**
+   * 计算流局分数
+   */
+  calculateLiuJuScores(playerId, teams) {
+    const scoreChanges = {};
+    const teamIndex = teams.findIndex(team => team.includes(parseInt(playerId)));
+    
+    if (teamIndex === -1) return scoreChanges;
+    
+    const currentTeam = teams[teamIndex];
+    const otherTeam = teams.find((_, idx) => idx !== teamIndex);
+    
+    // 当前队伍每人 -10 分
+    currentTeam.forEach(id => {
+      scoreChanges[id] = -10;
+    });
+    
+    // 对方队伍每人 +10 分
+    otherTeam.forEach(id => {
+      scoreChanges[id] = 10;
+    });
+    
+    return scoreChanges;
+  },
+
+  /**
+   * 玩家表头点击
+   */
+  onPlayerHeaderTap(e) {
     const index = e.currentTarget.dataset.index;
     const player = this.data.players[index];
     
@@ -157,9 +205,18 @@ Page({
       timestamp: new Date()
     }];
     
+    // 构建新的表格行
+    const newRow = {
+      id: scoreRecords.length,
+      scores: this.data.players.map((_, idx) => idx === index ? score : 0)
+    };
+    const scoreRows = [...this.data.scoreRows, newRow];
+    
     this.setData({
       players,
       scoreRecords,
+      scoreRows,
+      scrollToView: 'row-' + newRow.id,
       canUndo: true,
       showScoreInput: false
     });
@@ -176,7 +233,7 @@ Page({
     const teams = this.data.teams;
     
     // 计算流局分数
-    const scoreChanges = handleLiuJu(index, teams);
+    const scoreChanges = this.calculateLiuJuScores(index, teams);
     
     // 更新分数
     const players = [...this.data.players];
@@ -192,9 +249,18 @@ Page({
       timestamp: new Date()
     }];
     
+    // 构建新的表格行
+    const newRow = {
+      id: scoreRecords.length,
+      scores: this.data.players.map((_, idx) => scoreChanges[idx] || 0)
+    };
+    const scoreRows = [...this.data.scoreRows, newRow];
+    
     this.setData({
       players,
       scoreRecords,
+      scoreRows,
+      scrollToView: 'row-' + newRow.id,
       canUndo: true,
       showScoreInput: false
     });
@@ -252,15 +318,19 @@ Page({
       players[lastRecord.playerId].rawScore -= lastRecord.score;
     } else if (lastRecord.type === 'liuju') {
       // 流局撤销需要重新计算
-      const scoreChanges = handleLiuJu(lastRecord.playerId, this.data.teams);
+      const scoreChanges = this.calculateLiuJuScores(lastRecord.playerId, this.data.teams);
       for (const [playerIdx, change] of Object.entries(scoreChanges)) {
         players[playerIdx].rawScore -= change;
       }
     }
     
+    // 重新构建表格行
+    const scoreRows = this.buildScoreRows(scoreRecords);
+    
     this.setData({
       players,
       scoreRecords,
+      scoreRows,
       canUndo: scoreRecords.length > 0
     });
     
