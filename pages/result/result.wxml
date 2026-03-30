@@ -51,47 +51,13 @@
     </view>
   </view>
 
-  <!-- 游戏过程表格 -->
-  <view class="process-section" wx:if="{{hasConvertedScores && scoreRows.length > 0}}">
-    <view class="section-title">📊 游戏过程</view>
-    
-    <view class="score-table-container">
-      <!-- 表头（玩家名字） -->
-      <view class="table-header">
-        <view class="header-row">
-          <view class="header-cell" wx:for="{{players}}" wx:key="name">
-            <text class="player-name-text">{{item.name}}</text>
-          </view>
-        </view>
-      </view>
-      
-      <!-- 表格内容（得分记录） -->
-      <scroll-view class="table-body" scroll-y>
-        <view class="score-row" wx:for="{{scoreRows}}" wx:key="id" id="row-{{item.id}}">
-          <view class="score-cell" wx:for="{{item.scores}}" wx:key="playerIdx" wx:for-item="score" wx:for-index="playerIdx">
-            <text class="score-value {{score > 0 ? 'positive' : (score < 0 ? 'negative' : '')}}">{{utils.formatScore(score)}}</text>
-          </view>
-        </view>
-      </scroll-view>
-      
-      <!-- 表尾（原始总分） -->
-      <view class="table-footer">
-        <view class="footer-row">
-          <view class="footer-cell" wx:for="{{players}}" wx:key="name">
-            <text class="total-score {{item.rawScore >= 0 ? 'positive' : 'negative'}}">{{utils.formatScore(item.rawScore)}}</text>
-          </view>
-        </view>
-      </view>
-    </view>
-  </view>
-
   <!-- 分数详情列表 -->
   <view class="score-section">
     <view class="section-title">📈 最终得分</view>
     
     <view class="score-list">
       <view class="score-item" wx:for="{{players}}" wx:key="name">
-        <view class="score-rank">{{item.rank}}</view>
+        <!-- <view class="score-rank">{{item.rank}}</view> -->
         <view class="score-player-info">
           <view class="score-player-name">{{item.name}}</view>
           <view class="score-details" wx:if="{{hasConvertedScores}}">
@@ -101,6 +67,48 @@
         </view>
         <view class="score-final {{item.finalScore > 0 ? 'positive' : (item.finalScore < 0 ? 'negative' : '')}}">
           {{utils.formatScore(item.finalScore)}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏过程表格 -->
+  <view class="process-section" wx:if="{{hasConvertedScores && scoreRows && scoreRows.length > 0}}">
+    <view class="process-title" bindtap="toggleProcess">
+      <text>📊 游戏过程</text>
+      <text class="process-arrow">{{showProcess ? '↑' : '↓'}}</text>
+    </view>
+    
+    <view class="process-content" wx:if="{{showProcess}}">
+      <view class="score-table-container">
+        <!-- 表头（玩家名字） -->
+        <view class="table-header">
+          <view class="header-row">
+            <view class="header-cell" wx:for="{{players}}" wx:key="name">
+              <text class="player-name-text">{{item.name}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 表格内容（得分记录） -->
+        <scroll-view class="table-body" scroll-y>
+          <view class="score-row" wx:for="{{scoreRows}}" wx:key="id" id="row-{{item.id}}">
+            <view class="score-cell" wx:for="{{item.scores}}" wx:key="playerIdx" wx:for-item="score" wx:for-index="playerIdx">
+              <text class="score-value {{score > 0 ? 'positive' : (score < 0 ? 'negative' : '')}}">{{utils.formatScore(score)}}</text>
+            </view>
+          </view>
+          <view wx:if="{{scoreRows.length === 0}}" class="empty-hint">
+            <text>暂无游戏过程记录</text>
+          </view>
+        </scroll-view>
+        
+        <!-- 表尾（原始总分） -->
+        <view class="table-footer">
+          <view class="footer-row">
+            <view class="footer-cell" wx:for="{{players}}" wx:key="name">
+              <text class="total-score {{item.rawScore >= 0 ? 'positive' : 'negative'}}">{{utils.formatScore(item.rawScore)}}</text>
+            </view>
+          </view>
         </view>
       </view>
     </view>

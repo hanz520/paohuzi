@@ -18,7 +18,9 @@ Page({
     // 新增：游戏详细过程
     scoreRows: [],
     // 新增：转换分和最终分数
-    hasConvertedScores: false
+    hasConvertedScores: false,
+    // 新增：游戏过程展开状态
+    showProcess: false
   },
 
   onLoad: function (options) {
@@ -155,6 +157,15 @@ Page({
   toggleFormula() {
     this.setData({
       showFormula: !this.data.showFormula
+    });
+  },
+
+  /**
+   * 切换游戏过程显示
+   */
+  toggleProcess() {
+    this.setData({
+      showProcess: !this.data.showProcess
     });
   },
 

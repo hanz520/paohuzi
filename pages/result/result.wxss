@@ -113,6 +113,26 @@
   margin-bottom: 24rpx;
 }
 
+.process-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.process-arrow {
+  font-size: 32rpx;
+  color: #999;
+}
+
+.process-content {
+  padding-top: 20rpx;
+}
+
 .score-table-container {
   display: flex;
   flex-direction: column;
@@ -144,6 +164,13 @@
 .table-body {
   max-height: 400rpx;
   margin: 8rpx 0;
+}
+
+.empty-hint {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+  font-size: 26rpx;
 }
 
 .score-row {
