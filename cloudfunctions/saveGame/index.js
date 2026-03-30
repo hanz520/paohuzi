@@ -6,11 +6,15 @@ const db = cloud.database();
 exports.main = async (event, context) => {
   const { gameData } = event;
   
+  console.log('saveGame 接收到的数据:', gameData);
+  
   try {
     // 保存游戏记录
-    await db.collection('games').add({
+    const saveResult = await db.collection('games').add({
       data: gameData
     });
+    
+    console.log('游戏记录保存成功，ID:', saveResult._id);
     
     // 更新玩家统计
     for (const player of gameData.players) {
@@ -27,6 +31,7 @@ exports.main = async (event, context) => {
             lastPlayTime: new Date()
           }
         });
+        console.log('更新玩家统计:', player.name);
       } else {
         // 创建新玩家
         await db.collection('players').add({
@@ -38,11 +43,13 @@ exports.main = async (event, context) => {
             lastPlayTime: new Date()
           }
         });
+        console.log('创建新玩家:', player.name);
       }
     }
     
     return { success: true };
   } catch (err) {
+    console.error('saveGame 错误:', err);
     return { success: false, error: err.message };
   }
 };

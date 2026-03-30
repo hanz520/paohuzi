@@ -36,6 +36,13 @@ Page({
     this.setData({ loading: true });
 
     try {
+      console.log('加载游戏记录，参数:', {
+        page: this.data.page,
+        pageSize: this.data.pageSize,
+        mode: this.data.filterMode,
+        timeRange: this.data.filterTime
+      });
+
       const res = await cloud.getHistoryGames({
         page: this.data.page,
         pageSize: this.data.pageSize,
@@ -43,9 +50,13 @@ Page({
         timeRange: this.data.filterTime
       });
 
+      console.log('云函数返回:', res);
+
       if (res.result && res.result.success) {
         const newGames = res.result.games;
         const hasMore = res.result.hasMore;
+
+        console.log('获取到游戏数量:', newGames.length);
 
         this.setData({
           games: this.data.page === 1 ? newGames : [...this.data.games, ...newGames],
@@ -53,6 +64,9 @@ Page({
           page: this.data.page + 1,
           loading: false
         });
+      } else {
+        console.error('云函数返回失败:', res);
+        this.setData({ loading: false });
       }
     } catch (err) {
       console.error('加载游戏记录失败', err);
@@ -97,28 +111,6 @@ Page({
     }, () => {
       this.loadGames();
     });
-  },
-
-  /**
-   * 格式化时间
-   */
-  formatTime(dateStr) {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hour = date.getHours().toString().padStart(2, '0');
-    const minute = date.getMinutes().toString().padStart(2, '0');
-    return `${month}/${day} ${hour}:${minute}`;
-  },
-
-  /**
-   * 格式化时长
-   */
-  formatDuration(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}分${secs.toString().padStart(2, '0')}秒`;
   },
 
   /**

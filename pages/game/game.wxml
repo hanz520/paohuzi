@@ -1,9 +1,28 @@
 <!--pages/game/game.wxml-->
+<wxs module="utils">
+  function formatTime(seconds) {
+    if (!seconds || seconds < 0) return '00:00:00';
+    var hours = Math.floor(seconds / 3600);
+    var mins = Math.floor((seconds % 3600) / 60);
+    var secs = seconds % 60;
+    
+    var hoursStr = (hours < 10 ? '0' : '') + hours;
+    var minsStr = (mins < 10 ? '0' : '') + mins;
+    var secsStr = (secs < 10 ? '0' : '') + secs;
+    
+    return hoursStr + ':' + minsStr + ':' + secsStr;
+  }
+  
+  module.exports = {
+    formatTime: formatTime
+  };
+</wxs>
+
 <view class="container">
   <!-- 顶部信息栏 -->
   <view class="top-bar">
     <view class="mode-badge">{{mode}}模式</view>
-    <view class="timer">{{formatTime(timerSeconds)}}</view>
+    <view class="timer">{{utils.formatTime(timerSeconds)}}</view>
   </view>
 
   <!-- 积分表格 -->

@@ -1,4 +1,37 @@
 <!--pages/history/history.wxml-->
+<wxs module="utils">
+  function formatDuration(seconds) {
+    if (!seconds || seconds < 0) return '0 分 00 秒';
+    var hours = Math.floor(seconds / 3600);
+    var mins = Math.floor((seconds % 3600) / 60);
+    var secs = seconds % 60;
+    
+    if (hours > 0) {
+      return hours + '小时' + mins + '分' + secs + '秒';
+    } else {
+      return mins + '分' + (secs < 10 ? '0' : '') + secs + '秒';
+    }
+  }
+  
+  function formatTime(dateStr) {
+    if (!dateStr) return '';
+    var date = getDate(dateStr);
+    var month = (date.getMonth() + 1);
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    return (month < 10 ? '0' : '') + month + '/' + 
+           (day < 10 ? '0' : '') + day + ' ' + 
+           (hour < 10 ? '0' : '') + hour + ':' + 
+           (minute < 10 ? '0' : '') + minute;
+  }
+  
+  module.exports = {
+    formatDuration: formatDuration,
+    formatTime: formatTime
+  };
+</wxs>
+
 <view class="container">
   <!-- 筛选区域 -->
   <view class="filter-section">
@@ -62,7 +95,7 @@
     >
       <view class="game-header">
         <view class="game-mode">{{item.mode}}模式</view>
-        <view class="game-time">{{formatTime(item.createTime)}}</view>
+        <view class="game-time">{{utils.formatTime(item.createTime)}}</view>
       </view>
       
       <view class="game-players">
@@ -78,7 +111,7 @@
       
       <view class="game-footer">
         <view class="game-winner">获胜：{{item.winner}}</view>
-        <view class="game-duration">时长：{{formatDuration(item.duration)}}</view>
+        <view class="game-duration">时长：{{utils.formatDuration(item.duration)}}</view>
       </view>
     </view>
   </view>

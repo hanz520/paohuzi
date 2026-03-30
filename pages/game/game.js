@@ -80,15 +80,6 @@ Page({
   },
 
   /**
-   * 格式化时间
-   */
-  formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  },
-
-  /**
    * 获取玩家名字首字母
    */
   getPlayerInitial(name) {
@@ -390,8 +381,12 @@ Page({
         }
       };
       
+      console.log('准备保存游戏数据:', gameData);
+      
       // 保存到云端
-      await cloud.saveGame(gameData);
+      const saveResult = await cloud.saveGame(gameData);
+      
+      console.log('云函数保存结果:', saveResult);
       
       wx.hideLoading();
       
