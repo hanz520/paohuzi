@@ -9,10 +9,7 @@
   <!-- 玩家卡片区域 -->
   <view class="players-section">
     <view class="player-card" wx:for="{{players}}" wx:key="index" bindtap="onPlayerCardTap" data-index="{{index}}">
-      <!-- 头像 -->
-      <view class="player-avatar">
-        <text class="avatar-text">{{getPlayerInitial(item.name)}}</text>
-      </view>
+    
       
       <!-- 玩家信息 -->
       <view class="player-info">

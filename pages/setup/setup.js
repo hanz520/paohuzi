@@ -12,6 +12,9 @@ Page({
     filteredPlayers: [], // 筛选后的玩家
     searchText: '',
     
+    // Tab 相关
+    currentTab: 'history', // 'history' 或 'new'
+    
     // 新建玩家相关
     newPlayerName: '',
     canAddNewPlayer: false,
@@ -66,7 +69,8 @@ Page({
     const index = e.currentTarget.dataset.index;
     
     if (!this.data.players[index].selected) {
-      // 未选择时打开选择器
+      // 未选择时打开选择器，并过滤掉已选择的玩家
+      this.filterAvailablePlayers();
       this.setData({
         currentPlayerIndex: index,
         showPlayerSelector: true
@@ -79,6 +83,8 @@ Page({
    */
   onChangePlayer(e) {
     const index = e.currentTarget.dataset.index;
+    // 更换玩家时，允许选择当前玩家（因为要替换掉）
+    this.filterAvailablePlayers(index);
     this.setData({
       currentPlayerIndex: index,
       showPlayerSelector: true
@@ -99,6 +105,38 @@ Page({
     
     this.setData({ players });
     this.checkCanStart();
+  },
+
+  /**
+   * 过滤可选择的玩家（排除已选择的玩家）
+   * @param {number} currentIdx - 当前正在操作的玩家索引（允许被选择）
+   */
+  filterAvailablePlayers(currentIdx = -1) {
+    // 获取已选择的玩家名字列表（排除当前正在操作的玩家）
+    const selectedNames = this.data.players
+      .filter((p, idx) => p.selected && idx !== currentIdx)
+      .map(p => p.name);
+    
+    // 过滤掉已选择的玩家
+    const availablePlayers = this.data.allPlayers.filter(
+      p => !selectedNames.includes(p.nickname)
+    );
+    
+    this.setData({ filteredPlayers: availablePlayers });
+  },
+
+  /**
+   * Tab 切换
+   */
+  onTabTap(e) {
+    const tab = e.currentTarget.dataset.tab;
+    this.setData({ 
+      currentTab: tab,
+      searchText: '', // 切换 Tab 时清空搜索
+      newPlayerName: '', // 清空输入
+      canAddNewPlayer: false,
+      showDuplicateHint: false
+    });
   },
 
   /**
@@ -123,15 +161,49 @@ Page({
   },
 
   /**
+   * 确认新建玩家
+   */
+  onConfirmNewPlayer() {
+    const name = this.data.newPlayerName.trim();
+    
+    if (!name || !this.data.canAddNewPlayer) return;
+    
+    // 直接选择刚创建的玩家
+    const index = this.data.currentPlayerIndex;
+    if (index >= 0) {
+      const players = this.data.players;
+      players[index] = {
+        index: index,
+        name: name,
+        selected: true
+      };
+      
+      this.setData({ players });
+      this.closePlayerSelector();
+      this.checkCanStart();
+    }
+  },
+
+  /**
    * 搜索输入
    */
   onSearchInput(e) {
     const searchText = e.detail.value.toLowerCase();
     const allPlayers = this.data.allPlayers;
     
-    const filteredPlayers = searchText
+    // 先按搜索词过滤
+    const searchFiltered = searchText
       ? allPlayers.filter(p => p.nickname.toLowerCase().includes(searchText))
       : allPlayers;
+    
+    // 再过滤掉已选择的玩家
+    const selectedNames = this.data.players
+      .filter((p, idx) => p.selected && idx !== this.data.currentPlayerIndex)
+      .map(p => p.name);
+    
+    const filteredPlayers = searchFiltered.filter(
+      p => !selectedNames.includes(p.nickname)
+    );
     
     this.setData({ filteredPlayers, searchText });
   },
@@ -154,26 +226,11 @@ Page({
   },
 
   /**
-   * 添加新玩家
+   * 添加新玩家（已废弃，保留兼容性）
    */
   onAddNewPlayer() {
-    const name = this.data.newPlayerName.trim();
-    
-    if (!name || !this.data.canAddNewPlayer) return;
-    
-    // 选择刚创建的玩家
-    this.onSelectHistoryPlayer({
-      currentTarget: {
-        dataset: { name }
-      }
-    });
-    
-    // 清空输入
-    this.setData({
-      newPlayerName: '',
-      canAddNewPlayer: false,
-      showDuplicateHint: false
-    });
+    // 这个方法已经不再使用，保留以防兼容性问题
+    console.log('请使用 onConfirmNewPlayer 方法');
   },
 
   /**
@@ -183,7 +240,11 @@ Page({
     this.setData({
       showPlayerSelector: false,
       currentPlayerIndex: -1,
-      searchText: ''
+      searchText: '',
+      currentTab: 'history', // 重置为历史玩家 Tab
+      newPlayerName: '',
+      canAddNewPlayer: false,
+      showDuplicateHint: false
     });
   },
 

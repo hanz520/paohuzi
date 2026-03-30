@@ -9,10 +9,7 @@
 
   <!-- 获胜者展示 -->
   <view class="winner-section">
-    <view class="winner-card">
-      <view class="winner-avatar">
-        <text>{{getWinnerInitial()}}</text>
-      </view>
+    <view class="winner-card"> 
       <view class="winner-name">{{winner}}</view>
       <view class="winner-score">{{getWinnerScore()}}</view>
       <view class="winner-badge">获胜</view>

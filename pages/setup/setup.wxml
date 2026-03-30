@@ -10,10 +10,6 @@
   <view class="players-section">
     <view class="player-item" wx:for="{{playerCount}}" wx:key="index">
       <view class="player-card {{players[index].selected ? 'selected' : ''}}" bindtap="onPlayerCardTap" data-index="{{index}}">
-        <!-- 头像占位 -->
-        <view class="player-avatar">
-          <text class="avatar-text">{{players[index].selected ? getPlayerInitial(players[index].name) : index + 1}}</text>
-        </view>
         
         <!-- 玩家名字 -->
         <view class="player-info">
@@ -50,66 +46,87 @@
         <view class="modal-close" bindtap="closePlayerSelector">✕</view>
       </view>
       
-      <!-- 搜索框 -->
-      <view class="search-box">
-        <input 
-          class="search-input" 
-          placeholder="搜索玩家名字..." 
-          value="{{searchText}}"
-          bindinput="onSearchInput"
-        />
+      <!-- Tab 切换 -->
+      <view class="tab-bar">
+        <view 
+          class="tab-item {{currentTab === 'history' ? 'active' : ''}}" 
+          bindtap="onTabTap" 
+          data-tab="history"
+        >
+          📋 历史玩家
+        </view>
+        <view 
+          class="tab-item {{currentTab === 'new' ? 'active' : ''}}" 
+          bindtap="onTabTap" 
+          data-tab="new"
+        >
+          ➕ 新建玩家
+        </view>
       </view>
       
-      <!-- 玩家列表 -->
-      <scroll-view class="player-list" scroll-y>
-        <!-- 新建玩家输入框 -->
-        <view class="new-player-section">
-          <view class="section-label">➕ 新建玩家</view>
-          <view class="new-player-input">
-            <input 
-              class="input-field" 
-              placeholder="输入玩家名字，点击添加"
-              value="{{newPlayerName}}"
-              bindinput="onNewPlayerInput"
-              bindconfirm="onAddNewPlayer"
-            />
-            <button 
-              class="add-btn" 
-              disabled="{{!canAddNewPlayer}}"
-              bindtap="onAddNewPlayer"
-            >
-              添加
-            </button>
+      <!-- 历史玩家 Tab -->
+      <view class="tab-content {{currentTab === 'history' ? 'show' : 'hide'}}">
+        <!-- 搜索框 -->
+        <view class="search-box">
+          <input 
+            class="search-input" 
+            placeholder="搜索玩家名字..." 
+            value="{{searchText}}"
+            bindinput="onSearchInput"
+          />
+        </view>
+        
+        <!-- 玩家列表 -->
+        <scroll-view class="player-list" scroll-y>
+          <view 
+            class="history-player-item" 
+            wx:for="{{filteredPlayers}}" 
+            wx:key="_id"
+            bindtap="onSelectHistoryPlayer"
+            data-name="{{item.nickname}}"
+          > 
+            <view class="history-player-name">{{item.nickname}}</view>
+            <view class="history-player-stats" wx:if="{{item.totalGames}}">
+              <text>{{item.totalGames}}局</text>
+              <text wx:if="{{item.totalWins}}"> 胜率{{Math.round(item.totalWins / item.totalGames * 100)}}%</text>
+            </view>
           </view>
+          
+          <view class="empty-list" wx:if="{{filteredPlayers.length === 0 && !searchText}}">
+            <text>暂无历史玩家</text>
+            <text class="hint">切换到"新建玩家"创建新玩家</text>
+          </view>
+          
+          <view class="empty-list" wx:if="{{filteredPlayers.length === 0 && searchText}}">
+            <text>未找到匹配的玩家</text>
+            <text class="hint">试试其他关键词或新建玩家</text>
+          </view>
+        </scroll-view>
+      </view>
+      
+      <!-- 新建玩家 Tab -->
+      <view class="tab-content {{currentTab === 'new' ? 'show' : 'hide'}}">
+        <view class="new-player-tab-content">
+          <view class="new-player-label">输入玩家名字</view>
+          <input 
+            class="new-player-input-field" 
+            placeholder="请输入玩家名字" 
+            value="{{newPlayerName}}"
+            bindinput="onNewPlayerInput"
+            bindconfirm="onConfirmNewPlayer"
+          />
           <view class="duplicate-hint" wx:if="{{showDuplicateHint}}">
-            ⚠ 该玩家已存在，请直接选择
+            ⚠ 该玩家已存在，请在"历史玩家"中选择
           </view>
+          <button 
+            class="confirm-new-btn" 
+            disabled="{{!canAddNewPlayer}}"
+            bindtap="onConfirmNewPlayer"
+          >
+            确认并选择
+          </button>
         </view>
-        
-        <!-- 历史玩家列表 -->
-        <view class="list-label">📋 历史玩家</view>
-        <view 
-          class="history-player-item" 
-          wx:for="{{filteredPlayers}}" 
-          wx:key="_id"
-          bindtap="onSelectHistoryPlayer"
-          data-name="{{item.nickname}}"
-        >
-          <view class="history-player-avatar">
-            <text>{{item.nickname.charAt(0).toUpperCase()}}</text>
-          </view>
-          <view class="history-player-name">{{item.nickname}}</view>
-          <view class="history-player-stats" wx:if="{{item.totalGames}}">
-            <text>{{item.totalGames}}局</text>
-            <text wx:if="{{item.totalWins}}"> 胜率{{Math.round(item.totalWins / item.totalGames * 100)}}%</text>
-          </view>
-        </view>
-        
-        <view class="empty-list" wx:if="{{filteredPlayers.length === 0 && !newPlayerName}}">
-          <text>暂无历史玩家</text>
-          <text class="hint">在上方输入名字创建新玩家</text>
-        </view>
-      </scroll-view>
+      </view>
       
       <view class="modal-footer">
         <button class="cancel-btn" bindtap="closePlayerSelector">取消</button>

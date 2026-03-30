@@ -45,24 +45,7 @@
   align-items: center;
   gap: 20rpx;
 }
-
-.winner-avatar {
-  width: 160rpx;
-  height: 160rpx;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(255, 215, 0, 0.4);
-}
-
-.winner-avatar text {
-  font-size: 72rpx;
-  font-weight: bold;
-  color: #ffffff;
-}
-
+ 
 .winner-name {
   font-size: 40rpx;
   font-weight: bold;

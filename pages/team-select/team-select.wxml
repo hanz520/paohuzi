@@ -17,17 +17,8 @@
         wx:key="index"
         bindtap="onPlayerTap"
         data-index="{{index}}"
-      >
-        <!-- 选择标识 -->
-        <view class="select-icon" wx:if="{{isSelectedMap[index]}}">
-          <text>✓</text>
-        </view>
-        
-        <!-- 玩家头像占位 -->
-        <view class="player-avatar">
-          <text class="avatar-text">{{getPlayerInitial(item)}}</text>
-        </view>
-        
+      > 
+         
         <!-- 玩家名字 -->
         <view class="player-name">{{item}}</view>
         

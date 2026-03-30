@@ -69,20 +69,7 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
 }
-
-/* 选择标识 */
-.select-icon {
-  position: absolute;
-  top: 16rpx;
-  right: 16rpx;
-  width: 48rpx;
-  height: 48rpx;
-  background-color: #ffffff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+ 
 
 .select-icon text {
   font-size: 32rpx;
@@ -93,30 +80,8 @@
 .player-card.selected .select-icon text {
   color: #ffffff;
 }
-
-/* 玩家头像 */
-.player-avatar {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 24rpx;
-  flex-shrink: 0;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-}
-
-.avatar-text {
-  font-size: 40rpx;
-  font-weight: bold;
-  color: #667eea;
-}
-
-.player-card.selected .avatar-text {
-  color: #ffffff;
-}
+ 
+ 
 
 /* 玩家名字 */
 .player-name {
