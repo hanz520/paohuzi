@@ -126,22 +126,24 @@ Page({
    */
   calculateLiuJuScores(playerId, teams) {
     const scoreChanges = {};
-    const teamIndex = teams.findIndex(team => team.includes(parseInt(playerId)));
+    const playerIdNum = parseInt(playerId);
     
-    if (teamIndex === -1) return scoreChanges;
+    // 找到流局玩家所在的队伍
+    const team = teams.find(t => t.includes(playerIdNum));
+    const teammateId = team.find(i => i !== playerIdNum);
     
-    const currentTeam = teams[teamIndex];
-    const otherTeam = teams.find((_, idx) => idx !== teamIndex);
+    // 找到另一队
+    const otherTeam = teams.find(t => !t.includes(playerIdNum));
     
-    // 当前队伍每人 -10 分
-    currentTeam.forEach(id => {
-      scoreChanges[id] = -10;
-    });
+    // 流局规则：
+    // - 流局的玩家：-10 分
+    // - 流局玩家的队友：+10 分（因为对方流局）
+    // - 另一队的两名玩家：0 分（不受影响）
     
-    // 对方队伍每人 +10 分
-    otherTeam.forEach(id => {
-      scoreChanges[id] = 10;
-    });
+    scoreChanges[playerIdNum] = -10;
+    scoreChanges[teammateId] = +10;
+    scoreChanges[otherTeam[0]] = 0;
+    scoreChanges[otherTeam[1]] = 0;
     
     return scoreChanges;
   },

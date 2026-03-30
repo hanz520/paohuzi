@@ -144,9 +144,19 @@ function handleLiuJu(playerIndex, teams) {
   const team = teams.find(t => t.includes(playerIndex));
   const teammateIndex = team.find(i => i !== playerIndex);
   
+  // 找到另一队
+  const otherTeam = teams.find(t => !t.includes(playerIndex));
+  
+  // 流局规则：
+  // - 流局的玩家：-10 分
+  // - 流局玩家的队友：+10 分（因为对方流局）
+  // - 另一队的两名玩家：0 分（不受影响）
+  
   return {
     [playerIndex]: -10,
-    [teammateIndex]: +10
+    [teammateIndex]: +10,
+    [otherTeam[0]]: 0,
+    [otherTeam[1]]: 0
   };
 }
 

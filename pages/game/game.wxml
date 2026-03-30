@@ -13,8 +13,19 @@
     return hoursStr + ':' + minsStr + ':' + secsStr;
   }
   
+  function formatScore(score) {
+    if (score === 0) {
+      return '-';
+    } else if (score > 0) {
+      return '+' + score;
+    } else {
+      return score.toString();
+    }
+  }
+  
   module.exports = {
-    formatTime: formatTime
+    formatTime: formatTime,
+    formatScore: formatScore
   };
 </wxs>
 
@@ -40,7 +51,7 @@
     <scroll-view class="table-body" scroll-y scroll-into-view="{{scrollToView}}">
       <view class="score-row" wx:for="{{scoreRows}}" wx:key="id" id="row-{{item.id}}">
         <view class="score-cell" wx:for="{{item.scores}}" wx:key="playerIdx" wx:for-item="score" wx:for-index="playerIdx">
-          <text class="score-value {{score > 0 ? 'positive' : (score < 0 ? 'negative' : '')}}">{{score > 0 ? '+' + score : score}}</text>
+          <text class="score-value {{score > 0 ? 'positive' : (score < 0 ? 'negative' : '')}}">{{utils.formatScore(score)}}</text>
         </view>
       </view>
       <view wx:if="{{scoreRows.length === 0}}" class="empty-hint">
@@ -52,7 +63,7 @@
     <view class="table-footer">
       <view class="footer-row">
         <view class="footer-cell" wx:for="{{players}}" wx:key="index">
-          <text class="total-score {{item.rawScore >= 0 ? 'positive' : 'negative'}}">{{item.rawScore}}</text>
+          <text class="total-score {{item.rawScore >= 0 ? 'positive' : 'negative'}}">{{utils.formatScore(item.rawScore)}}</text>
         </view>
       </view>
     </view>

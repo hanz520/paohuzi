@@ -107,7 +107,6 @@
       <!-- 新建玩家 Tab -->
       <view class="tab-content {{currentTab === 'new' ? 'show' : 'hide'}}">
         <view class="new-player-tab-content">
-          <view class="new-player-label">输入玩家名字</view>
           <input 
             class="new-player-input-field" 
             placeholder="请输入玩家名字" 
